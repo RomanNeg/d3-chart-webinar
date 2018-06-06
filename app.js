@@ -37,8 +37,11 @@ function draw() {
 
   // https://github.com/d3/d3-selection#selection_merge
   addBars.merge(bars)
-    .attr('width', d => d.value)
-    .attr('y', (d, n) => n * 100);
+    // https://github.com/d3/d3-transition
+    .transition()
+      .duration(1000)
+        .attr('width', d => d.value)
+        .attr('y', (d, n) => n * 100);
 }
 
 draw();
