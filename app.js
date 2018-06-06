@@ -16,15 +16,6 @@ const svg = d3.select('body').append('svg')
   .append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-
-const data = [
-  { id: 1, title: 'hello', value: 22 },
-  { id: 2, title: 'hello1', value: 2 },
-  { id: 3, title: 'hello2', value: 122 },
-  { id: 4, title: 'hello3', value: 322 },
-];
-
-
 // https://github.com/d3/d3-scale#scaleLinear
 const x = d3.scaleLinear()
   .range([0, width]);
@@ -50,7 +41,7 @@ svg.append('g')
    .call(yAxis);
 
 
-function draw() {
+function draw(data) {
   const barHeight = 100;
   const barOffset = 3;
 
@@ -101,11 +92,11 @@ function draw() {
       .call(yAxis);
 }
 
-draw();
-
-setInterval(() => {
-  const elementNum = Math.round(Math.random() * 3);
-  data[elementNum].value = Math.round(Math.random() * 800);
-  const elementNumToDelete = Math.round(Math.random() * 3);
-  draw();
-}, 1000);
+Promise.all([
+  d3.json('http://localhost:8005/api/2/btc_usd/depth').then(d => ({ name: 'btc', ...d })),
+  d3.json('http://localhost:8005/api/2/ltc_usd/depth').then(d => ({ name: 'ltc', ...d })),
+  d3.json('http://localhost:8005/api/2/eth_usd/depth').then(d => ({ name: 'eth', ...d })),
+]).then(result => {
+  data = result.map((depth, n) => ({ id: n, title: depth.name, value: depth.bids[0][0] }));
+  draw(data);
+});
