@@ -25,6 +25,19 @@ const data = [
 ];
 
 
+// https://github.com/d3/d3-scale#scaleLinear
+const x = d3.scaleLinear()
+  .range([0, width]);
+
+// https://github.com/d3/d3-axis#axisTop
+const xAxis = d3.axisTop()
+      .scale(x);
+
+svg
+  .append('g')
+  .attr('class', 'axis-x')
+  .call(xAxis);
+
 function draw() {
   const barHeight = 100;
   const barOffset = 3;
@@ -34,10 +47,7 @@ function draw() {
     d3.max(data, d => d.value)
   ];
 
-  // https://github.com/d3/d3-scale#scaleLinear
-  const x = d3.scaleLinear()
-    .range([0, width])
-    .domain(valueRange);
+  x.domain(valueRange);
 
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
@@ -64,6 +74,11 @@ function draw() {
       .duration(1000)
         .attr('width', d => x(d.value))
         .attr('y', (d, n) => n * barHeight + n * barOffset);
+
+  svg
+    .select('.axis-x')
+    .transition()
+      .call(xAxis);
 }
 
 draw();
