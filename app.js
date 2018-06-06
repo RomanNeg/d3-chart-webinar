@@ -23,15 +23,19 @@ const data = [
   { id: 4, title: 'hello3', value: 322 },
 ];
 
+data.map((item, n) => {
+  // https://github.com/d3/d3-selection
+  svg.append('rect')
+    .attr('class', 'bar')
+    .attr('height', 100);
+});
+
 function draw() {
-  data.map((item, n) => {
-    // https://github.com/d3/d3-selection
-    svg.append('rect')
-      .attr('class', 'bar')
-      .attr('width', item.value)
-      .attr('y', n * 100)
-      .attr('height', 100);
-  });
+  // https://github.com/d3/d3-selection#joining-data
+  d3.selectAll('.bar')
+    .data(data)
+      .attr('width', d => d.value)
+      .attr('y', (d, n) => n * 100);
 }
 
 
