@@ -30,6 +30,14 @@ function draw() {
 
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
+
+  bars
+    .exit()
+    .transition()
+      .duration(1000)
+      .attr('width', 0)
+      .style('fill', 'red')
+      .remove();
  
   // https://github.com/d3/d3-selection#selection_enter
   const addBars = bars
@@ -52,5 +60,6 @@ draw();
 setTimeout(() => {
   console.log('----');
   data[1].value = 222;
+  data.splice(3);
   draw();
 }, 1000);
