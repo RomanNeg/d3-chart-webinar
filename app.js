@@ -38,6 +38,18 @@ svg
   .attr('class', 'axis-x')
   .call(xAxis);
 
+// https://github.com/d3/d3-scale#scaleBand
+const y = d3.scaleBand()
+      .range([0, height]);
+
+const yAxis = d3.axisLeft()
+  .scale(y);
+
+svg.append('g')
+   .attr('class', 'y-axis')
+   .call(yAxis);
+
+
 function draw() {
   const barHeight = 100;
   const barOffset = 3;
@@ -48,6 +60,9 @@ function draw() {
   ];
 
   x.domain(valueRange);
+  y
+    .domain(data.map(d => d.title))
+    .range([0, data.length * barHeight + data.length * barOffset - barOffset]);
 
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
@@ -79,6 +94,11 @@ function draw() {
     .select('.axis-x')
     .transition()
       .call(xAxis);
+
+  svg
+    .select('.y-axis')
+      .transition()
+      .call(yAxis);
 }
 
 draw();
