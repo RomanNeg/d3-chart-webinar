@@ -25,6 +25,9 @@ const data = [
 ];
 
 function draw() {
+  const barHeight = 100;
+  const barOffset = 3;
+
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
  
@@ -33,7 +36,7 @@ function draw() {
     .enter()
       .append('rect')
         .attr('class', 'bar')
-        .attr('height', 100);
+        .attr('height', barHeight);
 
   // https://github.com/d3/d3-selection#selection_merge
   addBars.merge(bars)
@@ -41,7 +44,7 @@ function draw() {
     .transition()
       .duration(1000)
         .attr('width', d => d.value)
-        .attr('y', (d, n) => n * 100);
+        .attr('y', (d, n) => n * barHeight + n * barOffset);
 }
 
 draw();
