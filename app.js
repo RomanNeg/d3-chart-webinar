@@ -24,9 +24,20 @@ const data = [
   { id: 4, title: 'hello3', value: 322 },
 ];
 
+
 function draw() {
   const barHeight = 100;
   const barOffset = 3;
+
+  const valueRange = [
+    0,
+    d3.max(data, d => d.value)
+  ];
+
+  // https://github.com/d3/d3-scale#scaleLinear
+  const x = d3.scaleLinear()
+    .range([0, width])
+    .domain(valueRange);
 
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
@@ -51,15 +62,15 @@ function draw() {
     // https://github.com/d3/d3-transition
     .transition()
       .duration(1000)
-        .attr('width', d => d.value)
+        .attr('width', d => x(d.value))
         .attr('y', (d, n) => n * barHeight + n * barOffset);
 }
 
 draw();
 
-setTimeout(() => {
-  console.log('----');
-  data[1].value = 222;
-  data.splice(3);
+setInterval(() => {
+  const elementNum = Math.round(Math.random() * 3);
+  data[elementNum].value = Math.round(Math.random() * 800);
+  const elementNumToDelete = Math.round(Math.random() * 3);
   draw();
 }, 1000);
