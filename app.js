@@ -27,20 +27,24 @@ const data = [
 function draw() {
   // https://github.com/d3/d3-selection#joining-data
   const bars = svg.selectAll('.bar').data(data);
-  
-  bars 
-    .attr('width', d => d.value)
-    .attr('y', (d, n) => n * 100);
  
   // https://github.com/d3/d3-selection#selection_enter
-  bars
+  const addBars = bars
     .enter()
       .append('rect')
         .attr('class', 'bar')
-        .attr('height', 100)
-        .attr('width', d => d.value)
-        .attr('y', (d, n) => n * 100);
+        .attr('height', 100);
+
+  // https://github.com/d3/d3-selection#selection_merge
+  addBars.merge(bars)
+    .attr('width', d => d.value)
+    .attr('y', (d, n) => n * 100);
 }
 
-
 draw();
+
+setTimeout(() => {
+  console.log('----');
+  data[1].value = 222;
+  draw();
+}, 1000);
